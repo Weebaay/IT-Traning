@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Support Trainer — Prépare ton entretien</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e3a5f;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --green: #10b981;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --text: #e2e8f0;
+    --text-dim: #64748b;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,14,26,0.95);
+    backdrop-filter: blur(12px);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    border: 2px solid var(--accent);
+    display: grid; place-items: center;
+    font-size: 14px;
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink {
+    0%,100%{box-shadow:0 0 8px var(--accent);}
+    50%{box-shadow:0 0 20px var(--accent);}
+  }
+
+  .xp-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .xp-bar {
+    width: 160px; height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+
+  #xp-label { color: var(--accent); font-weight: 700; }
+
+  /* MAIN LAYOUT */
+  .app {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: calc(100vh - 61px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(17,24,39,0.7);
+  }
+
+  .sidebar-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    padding: 0 20px 8px;
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dim);
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .nav-item:hover { color: var(--text); background: rgba(0,212,255,0.04); }
+
+  .nav-item.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: rgba(0,212,255,0.07);
+  }
+
+  .nav-item .badge {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--surface2);
+    color: var(--text-dim);
+  }
+
+  .nav-item.active .badge { background: rgba(0,212,255,0.15); color: var(--accent); }
+
+  /* CONTENT */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+  }
+
+  .page { display: none; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  /* DASHBOARD */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .stat-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--card-color, var(--accent));
+  }
+
+  .stat-icon { font-size: 24px; margin-bottom: 12px; }
+  .stat-value { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--card-color, var(--accent)); }
+  .stat-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* MODULE CARDS */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .module-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .module-card:hover {
+    border-color: var(--module-color, var(--accent));
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .module-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--module-color, var(--accent));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .module-card:hover::after { transform: scaleX(1); }
+
+  .module-icon { font-size: 32px; margin-bottom: 14px; }
+  .module-name { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+  .module-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+  .module-progress { margin-top: 16px; }
+  .module-progress-bar { height: 4px; background: var(--surface2); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .module-progress-fill { height: 100%; border-radius: 2px; background: var(--module-color, var(--accent)); transition: width 0.8s ease; }
+  .module-progress-text { font-family: var(--mono); font-size: 10px; color: var(--text-dim); display: flex; justify-content: space-between; }
+
+  /* EXERCISE AREA */
+  .exercise-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .back-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .back-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  .exercise-title {
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  /* TERMINAL */
+  .terminal {
+    background: #000d14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    font-family: var(--mono);
+  }
+
+  .terminal-header {
+    background: #0d1117;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .term-dot.r { background: #ff5f57; }
+  .term-dot.y { background: #ffbd2e; }
+  .term-dot.g { background: #28c840; }
+  .term-title { font-size: 11px; color: var(--text-dim); margin-left: 8px; letter-spacing: 1px; }
+
+  .terminal-body {
+    padding: 20px;
+    min-height: 120px;
+  }
+
+  .term-prompt {
+    color: var(--green);
+    font-size: 13px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .term-prompt span.path { color: var(--accent); }
+  .term-prompt span.sym { color: var(--accent2); }
+
+  .term-input {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    flex: 1;
+    outline: none;
+    caret-color: var(--accent);
+    min-width: 200px;
+  }
+
+  .term-output {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    margin-top: 10px;
+  }
+
+  .term-output.success { color: var(--green); }
+  .term-output.error { color: var(--red); }
+  .term-output.info { color: var(--accent); }
+
+  /* EXERCISE CARD */
+  .exercise-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .exercise-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .exercise-card .difficulty {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+  }
+
+  .difficulty.easy { background: rgba(16,185,129,0.15); color: var(--green); }
+  .difficulty.medium { background: rgba(245,158,11,0.15); color: var(--yellow); }
+  .difficulty.hard { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  .exercise-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .hint-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 6px 12px;
+    background: rgba(245,158,11,0.1);
+    color: var(--yellow);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .hint-btn:hover { background: rgba(245,158,11,0.2); }
+
+  .hint-text {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(245,158,11,0.05);
+    border-left: 3px solid var(--yellow);
+    border-radius: 0 6px 6px 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--yellow);
+    line-height: 1.6;
+  }
+
+  .hint-text.show { display: block; }
+
+  /* QCM */
+  .qcm-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .qcm-question {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .qcm-category {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .qcm-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .option-btn {
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: var(--sans);
+    color: var(--text);
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+
+  .option-btn.correct { border-color: var(--green); background: rgba(16,185,129,0.1); color: var(--green); }
+  .option-btn.wrong { border-color: var(--red); background: rgba(239,68,68,0.1); color: var(--red); }
+  .option-btn:disabled { cursor: default; }
+
+  .option-letter {
+    width: 24px; height: 24px;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    display: grid;
+    place-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .explanation {
+    display: none;
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(0,212,255,0.05);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #94a3b8;
+  }
+
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--accent); }
+
+  .qcm-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .q-counter {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  /* SQL editor */
+  .sql-editor {
+    background: #000d14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .sql-editor-header {
+    background: #0d1117;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sql-label { font-family: var(--mono); font-size: 11px; color: #f59e0b; letter-spacing: 1px; }
+
+  .sql-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 20px;
+    min-height: 120px;
+    outline: none;
+    resize: vertical;
+    line-height: 1.7;
+  }
+
+  .sql-run-btn {
+    background: rgba(245,158,11,0.15);
+    color: var(--yellow);
+    border: 1px solid rgba(245,158,11,0.4);
+    padding: 6px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    transition: all 0.2s;
+  }
+
+  .sql-run-btn:hover { background: rgba(245,158,11,0.25); }
+
+  .sql-result {
+    margin-top: 10px;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .sql-result table { width: 100%; border-collapse: collapse; }
+  .sql-result th { color: var(--accent); border-bottom: 1px solid var(--border); padding: 6px 12px; text-align: left; font-size: 11px; }
+  .sql-result td { padding: 6px 12px; border-bottom: 1px solid rgba(30,58,95,0.5); font-size: 11px; }
+
+  /* SCORE TOAST */
+  .toast {
+    position: fixed;
+    top: 80px;
+    right: 24px;
+    z-index: 999;
+    background: var(--surface);
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--green);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+
+  .toast.show { transform: translateX(0); }
+
+  /* Progress ring */
+  .score-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 24px;
+  }
+
+  .score-number {
+    font-family: var(--mono);
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .score-label { color: var(--text-dim); font-size: 12px; letter-spacing: 2px; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .tab {
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text-dim);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+    letter-spacing: 0.5px;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== RESPONSIVE MOBILE ===== */
+  @media (max-width: 768px) {
+
+    /* Header compact */
+    header {
+      padding: 12px 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .logo {
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .logo-icon { width: 26px; height: 26px; font-size: 12px; }
+
+    .xp-bar-wrap {
+      gap: 8px;
+      font-size: 10px;
+    }
+
+    .xp-bar { width: 80px; }
+
+    /* Layout : sidebar disparaît, bottom nav à la place */
+    .app {
+      flex-direction: column;
+      min-height: calc(100vh - 56px);
+      padding-bottom: 70px; /* espace pour bottom nav */
+    }
+
+    .sidebar {
+      display: none; /* masquée — remplacée par bottom nav */
+    }
+
+    .content {
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    /* BOTTOM NAV (mobile) */
+    .bottom-nav {
+      display: flex !important;
+    }
+
+    /* Dashboard titre */
+    #page-dashboard h1 {
+      font-size: 20px !important;
+    }
+
+    /* Grilles adaptatives */
+    .dashboard-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .module-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .stat-card { padding: 14px; }
+    .stat-value { font-size: 22px; }
+    .stat-icon { font-size: 18px; margin-bottom: 8px; }
+
+    /* Exercise header */
+    .exercise-header {
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .exercise-title { font-size: 16px; }
+
+    /* Terminal scrollable */
+    .terminal { overflow-x: auto; }
+    .terminal-body { padding: 14px; min-height: 90px; }
+    .term-input { min-width: 100%; font-size: 12px; }
+    .term-prompt { font-size: 11px; gap: 4px; }
+    .term-title { display: none; }
+
+    /* Exercise cards */
+    .exercise-card { padding: 16px; }
+    .exercise-card h3 { font-size: 13px; flex-wrap: wrap; }
+
+    /* QCM */
+    .qcm-card { padding: 16px; }
+    .qcm-question { font-size: 14px; }
+    .option-btn { padding: 12px 14px; font-size: 12px; }
+
+    /* SQL */
+    .sql-textarea { font-size: 12px; padding: 14px; }
+    .sql-result { overflow-x: auto; }
+    .sql-result table { min-width: 300px; }
+
+    /* Cheat sheets */
+    .cheat-grid { grid-template-columns: 1fr; }
+    .cheat-item code { font-size: 10px; overflow-x: auto; display: block; white-space: pre; }
+
+    /* Tabs scrollables */
+    .tabs { overflow-x: auto; white-space: nowrap; flex-wrap: nowrap; padding-bottom: 0; }
+    .tab { padding: 8px 14px; font-size: 11px; flex-shrink: 0; }
+
+    /* Toast */
+    .toast { right: 12px; left: 12px; font-size: 12px; }
+
+    /* Score display */
+    .score-number { font-size: 36px; }
+  }
+
+  @media (max-width: 400px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    header { padding: 10px 12px; }
+    .xp-bar { display: none; }
+  }
+
+  /* BOTTOM NAV — mobile only */
+  .bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,14,26,0.98);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    padding: 6px 4px;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    min-width: 44px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: var(--sans);
+  }
+
+  .bottom-nav-item .bn-icon { font-size: 18px; line-height: 1; }
+  .bottom-nav-item .bn-label {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    color: inherit;
+    white-space: nowrap;
+  }
+
+  .bottom-nav-item.active { color: var(--accent); background: rgba(0,212,255,0.08); }
+  .bottom-nav-item:active { transform: scale(0.92); }
+
+  .scroll-fade { animation: fadeUp 0.4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+
+  .streak { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--accent2); }
+
+  /* Cheat sheet */
+  .cheat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .cheat-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .cheat-item h4 { font-family: var(--mono); font-size: 12px; color: var(--accent); margin-bottom: 10px; }
+  .cheat-item code { display: block; font-family: var(--mono); font-size: 11px; color: #94a3b8; line-height: 1.8; }
+  .cheat-item code span { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    IT SUPPORT TRAINER
+  </div>
+  <div class="xp-bar-wrap">
+    <span class="streak">🔥 <span id="streak-count">0</span></span>
+    <span id="xp-label">XP: <span id="xp-val">0</span></span>
+    <div class="xp-bar">
+      <div class="xp-fill" id="xp-fill" style="width:0%"></div>
+    </div>
+    <span id="level-label" style="font-family:var(--mono);font-size:11px;color:var(--accent3);">LVL 1</span>
+  </div>
+</header>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="sidebar-label">Navigation</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">🏠 Dashboard</div>
+    <div class="sidebar-label">Modules</div>
+    <div class="nav-item" onclick="showPage('powershell')">⚡ PowerShell <span class="badge">8 ex</span></div>
+    <div class="nav-item" onclick="showPage('sql')">🗄️ SQL Server <span class="badge">6 ex</span></div>
+    <div class="nav-item" onclick="showPage('network')">🌐 Réseau <span class="badge">12 QCM</span></div>
+    <div class="nav-item" onclick="showPage('itil')">📋 ITIL <span class="badge">10 QCM</span></div>
+    <div class="nav-item" onclick="showPage('vmware')">💻 VMware/Virt. <span class="badge">8 QCM</span></div>
+    <div class="nav-item" onclick="showPage('ad')">👤 Active Directory <span class="badge">6 QCM</span></div>
+    <div class="sidebar-label">Ressources</div>
+    <div class="nav-item" onclick="showPage('cheatsheet')">📄 Cheat Sheets</div>
+  </nav>
+
+  <main class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div style="margin-bottom:28px;">
+        <h1 style="font-size:28px;font-weight:800;margin-bottom:6px;">Bonjour, technicien 👋</h1>
+        <p style="color:var(--text-dim);font-size:14px;">Prépare ton entretien pour le poste de <strong style="color:var(--accent)">Technicien Support IT N1/N2</strong></p>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="stat-card" style="--card-color:#00d4ff" onclick="showPage('powershell')">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-value" id="ps-score">0</div>
+          <div class="stat-label">Exercices PowerShell</div>
+        </div>
+        <div class="stat-card" style="--card-color:#f59e0b" onclick="showPage('sql')">
+          <div class="stat-icon">🗄️</div>
+          <div class="stat-value" id="sql-score">0</div>
+          <div class="stat-label">Requêtes SQL</div>
+        </div>
+        <div class="stat-card" style="--card-color:#10b981" onclick="showPage('network')">
+          <div class="stat-icon">🌐</div>
+          <div class="stat-value" id="net-score">0%</div>
+          <div class="stat-label">Score Réseau</div>
+        </div>
+        <div class="stat-card" style="--card-color:#7c3aed" onclick="showPage('itil')">
+          <div class="stat-icon">📋</div>
+          <div class="stat-value" id="itil-score">0%</div>
+          <div class="stat-label">Score ITIL</div>
+        </div>
+      </div>
+
+      <div class="section-title">Modules de formation</div>
+      <div class="module-grid">
+        <div class="module-card" style="--module-color:#00d4ff" onclick="showPage('powershell')">
+          <div class="module-icon">⚡</div>
+          <div class="module-name">Scripting PowerShell</div>
+          <div class="module-desc">Commandes de base, gestion des utilisateurs, automatisation de tâches IT.</div>
+          <div class="module-progress">
+            <div class="module-progress-text"><span>Progression</span><span id="ps-prog">0/8</span></div>
+            <div class="module-progress-bar"><div class="module-progress-fill" id="ps-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="module-card" style="--module-color:#f59e0b" onclick="showPage('sql')">
+          <div class="module-icon">🗄️</div>
+          <div class="module-name">SQL Server (Support)</div>
+          <div class="module-desc">Requêtes SELECT, diagnostics, vérification de connectivité et données.</div>
+          <div class="module-progress">
+            <div class="module-progress-text"><span>Progression</span><span id="sql-prog">0/6</span></div>
+            <div class="module-progress-bar"><div class="module-progress-fill" id="sql-bar" style="width:0%;background:var(--yellow)"></div></div>
+          </div>
+        </div>
+        <div class="module-card" style="--module-color:#10b981" onclick="showPage('network')">
+          <div class="module-icon">🌐</div>
+          <div class="module-name">Réseau LAN/VLAN/WAN</div>
+          <div class="module-desc">QCM sur switching, routing, VLAN, WLAN — niveau support N1/N2.</div>
+          <div class="module-progress">
+            <div class="module-progress-text"><span>Progression</span><span id="net-prog">0/12</span></div>
+            <div class="module-progress-bar"><div class="module-progress-fill" id="net-bar" style="width:0%;background:var(--green)"></div></div>
+          </div>
+        </div>
+        <div class="module-card" style="--module-color:#7c3aed" onclick="showPage('itil')">
+          <div class="module-icon">📋</div>
+          <div class="module-name">Bases ITIL</div>
+          <div class="module-desc">Processus ITSM, gestion des incidents, SLA, escalades, EasyVista.</div>
+          <div class="module-progress">
+            <div class="module-progress-text"><span>Progression</span><span id="itil-prog">0/10</span></div>
+            <div class="module-progress-bar"><div class="module-progress-fill" id="itil-bar" style="width:0%;background:var(--accent3)"></div></div>
+          </div>
+        </div>
+        <div class="module-card" style="--module-color:#ff6b35" onclick="showPage('vmware')">
+          <div class="module-icon">💻</div>
+          <div class="module-name">VMware / Virtualisation</div>
+          <div class="module-desc">Support utilisateur sur VMs, snapshots, Citrix, environnements virtualisés.</div>
+          <div class="module-progress">
+            <div class="module-progress-text"><span>Progression</span><span id="vm-prog">0/8</span></div>
+            <div class="module-progress-bar"><div class="module-progress-fill" id="vm-bar" style="width:0%;background:var(--accent2)"></div></div>
+          </div>
+        </div>
+        <div class="module-card" style="--module-color:#ec4899" onclick="showPage('ad')">
+          <div class="module-icon">👤</div>
+          <div class="module-name">Active Directory</div>
+          <div class="module-desc">Gestion comptes, groupes, droits, GPO — scénarios support réels.</div>
+          <div class="module-progress">
+            <div class="module-progress-text"><span>Progression</span><span id="ad-prog">0/6</span></div>
+            <div class="module-progress-bar"><div class="module-progress-fill" id="ad-bar" style="width:0%;background:#ec4899"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POWERSHELL -->
+    <div class="page" id="page-powershell">
+      <div class="exercise-header">
+        <button class="back-btn" onclick="showPage('dashboard')">← Retour</button>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;">MODULE 01</div>
+          <div class="exercise-title">⚡ PowerShell — Scripting de base</div>
+        </div>
+      </div>
+      <div id="ps-exercises"></div>
+    </div>
+
+    <!-- SQL -->
+    <div class="page" id="page-sql">
+      <div class="exercise-header">
+        <button class="back-btn" onclick="showPage('dashboard')">← Retour</button>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--yellow);letter-spacing:2px;margin-bottom:4px;">MODULE 02</div>
+          <div class="exercise-title">🗄️ SQL Server — Requêtes support</div>
+        </div>
+      </div>
+      <div id="sql-exercises"></div>
+    </div>
+
+    <!-- NETWORK QCM -->
+    <div class="page" id="page-network">
+      <div class="exercise-header">
+        <button class="back-btn" onclick="showPage('dashboard')">← Retour</button>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:2px;margin-bottom:4px;">MODULE 03</div>
+          <div class="exercise-title">🌐 Réseau — LAN / VLAN / WAN</div>
+        </div>
+      </div>
+      <div id="network-score-display" class="score-display" style="display:none">
+        <div class="score-number" id="net-final-score">0/12</div>
+        <div class="score-label">SCORE FINAL</div>
+      </div>
+      <div id="network-qcm"></div>
+    </div>
+
+    <!-- ITIL QCM -->
+    <div class="page" id="page-itil">
+      <div class="exercise-header">
+        <button class="back-btn" onclick="showPage('dashboard')">← Retour</button>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--accent3);letter-spacing:2px;margin-bottom:4px;">MODULE 04</div>
+          <div class="exercise-title">📋 ITIL — Fondamentaux</div>
+        </div>
+      </div>
+      <div id="itil-score-display" class="score-display" style="display:none">
+        <div class="score-number" id="itil-final-score">0/10</div>
+        <div class="score-label">SCORE FINAL</div>
+      </div>
+      <div id="itil-qcm"></div>
+    </div>
+
+    <!-- VMWARE QCM -->
+    <div class="page" id="page-vmware">
+      <div class="exercise-header">
+        <button class="back-btn" onclick="showPage('dashboard')">← Retour</button>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--accent2);letter-spacing:2px;margin-bottom:4px;">MODULE 05</div>
+          <div class="exercise-title">💻 VMware & Virtualisation</div>
+        </div>
+      </div>
+      <div id="vmware-qcm"></div>
+    </div>
+
+    <!-- AD QCM -->
+    <div class="page" id="page-ad">
+      <div class="exercise-header">
+        <button class="back-btn" onclick="showPage('dashboard')">← Retour</button>
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:#ec4899;letter-spacing:2px;margin-bottom:4px;">MODULE 06</div>
+          <div class="exercise-title">👤 Active Directory</div>
+        </div>
+      </div>
+      <div id="ad-qcm"></div>
+    </div>
+
+    <!-- CHEAT SHEET -->
+    <div class="page" id="page-cheatsheet">
+      <div class="exercise-header">
+        <button class="back-btn" onclick="showPage('dashboard')">← Retour</button>
+        <div class="exercise-title">📄 Cheat Sheets — Référence rapide</div>
+      </div>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,'cs-ps')">⚡ PowerShell</div>
+        <div class="tab" onclick="switchTab(this,'cs-sql')">🗄️ SQL</div>
+        <div class="tab" onclick="switchTab(this,'cs-net')">🌐 Réseau</div>
+        <div class="tab" onclick="switchTab(this,'cs-itil')">📋 ITIL</div>
+      </div>
+      <div id="cs-ps" class="tab-content active"></div>
+      <div id="cs-sql" class="tab-content"></div>
+      <div id="cs-net" class="tab-content"></div>
+      <div id="cs-itil" class="tab-content"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- BOTTOM NAV mobile -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bottom-nav-item active" onclick="showPage('dashboard')" data-page="dashboard">
+    <span class="bn-icon">🏠</span><span class="bn-label">Home</span>
+  </button>
+  <button class="bottom-nav-item" onclick="showPage('powershell')" data-page="powershell">
+    <span class="bn-icon">⚡</span><span class="bn-label">PS</span>
+  </button>
+  <button class="bottom-nav-item" onclick="showPage('sql')" data-page="sql">
+    <span class="bn-icon">🗄️</span><span class="bn-label">SQL</span>
+  </button>
+  <button class="bottom-nav-item" onclick="showPage('network')" data-page="network">
+    <span class="bn-icon">🌐</span><span class="bn-label">Réseau</span>
+  </button>
+  <button class="bottom-nav-item" onclick="showPage('itil')" data-page="itil">
+    <span class="bn-icon">📋</span><span class="bn-label">ITIL</span>
+  </button>
+  <button class="bottom-nav-item" onclick="showPage('vmware')" data-page="vmware">
+    <span class="bn-icon">💻</span><span class="bn-label">VM</span>
+  </button>
+  <button class="bottom-nav-item" onclick="showPage('ad')" data-page="ad">
+    <span class="bn-icon">👤</span><span class="bn-label">AD</span>
+  </button>
+  <button class="bottom-nav-item" onclick="showPage('cheatsheet')" data-page="cheatsheet">
+    <span class="bn-icon">📄</span><span class="bn-label">Cheat</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STATE =====
+const state = {
+  xp: 0, level: 1, streak: 0,
+  psCompleted: new Set(),
+  sqlCompleted: new Set(),
+  netAnswered: {}, itilAnswered: {}, vmAnswered: {}, adAnswered: {},
+  netCorrect:0, itilCorrect:0, vmCorrect:0, adCorrect:0
+};
+
+// ===== NAV =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(i => {
+    if(i.getAttribute('onclick')?.includes("'"+id+"'")) i.classList.add('active');
+  });
+  document.querySelectorAll('.bottom-nav-item').forEach(i => {
+    if(i.dataset.page === id) i.classList.add('active');
+  });
+  // Scroll to top on mobile
+  document.querySelector('.content').scrollTo(0, 0);
+}
+
+function switchTab(el, targetId) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const parent = el.closest('.page');
+  parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(targetId).classList.add('active');
+}
+
+// ===== XP SYSTEM =====
+function addXP(pts) {
+  state.xp += pts;
+  state.streak++;
+  document.getElementById('xp-val').textContent = state.xp;
+  document.getElementById('streak-count').textContent = state.streak;
+  const lvl = Math.floor(state.xp / 100) + 1;
+  state.level = lvl;
+  document.getElementById('level-label').textContent = 'LVL ' + lvl;
+  document.getElementById('xp-fill').style.width = ((state.xp % 100)) + '%';
+  showToast('+' + pts + ' XP 🎉');
+  updateDashboard();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== DASHBOARD UPDATE =====
+function updateDashboard() {
+  document.getElementById('ps-score').textContent = state.psCompleted.size;
+  document.getElementById('sql-score').textContent = state.sqlCompleted.size;
+  const netPct = Object.keys(state.netAnswered).length;
+  const itilPct = Object.keys(state.itilAnswered).length;
+  document.getElementById('net-score').textContent = netPct > 0 ? Math.round(state.netCorrect/netPct*100)+'%' : '0%';
+  document.getElementById('itil-score').textContent = itilPct > 0 ? Math.round(state.itilCorrect/itilPct*100)+'%' : '0%';
+  document.getElementById('ps-prog').textContent = state.psCompleted.size+'/8';
+  document.getElementById('ps-bar').style.width = (state.psCompleted.size/8*100)+'%';
+  document.getElementById('sql-prog').textContent = state.sqlCompleted.size+'/6';
+  document.getElementById('sql-bar').style.width = (state.sqlCompleted.size/6*100)+'%';
+  document.getElementById('net-prog').textContent = netPct+'/12';
+  document.getElementById('net-bar').style.width = (netPct/12*100)+'%';
+  document.getElementById('itil-prog').textContent = itilPct+'/10';
+  document.getElementById('itil-bar').style.width = (itilPct/10*100)+'%';
+  document.getElementById('vm-prog').textContent = Object.keys(state.vmAnswered).length+'/8';
+  document.getElementById('vm-bar').style.width = (Object.keys(state.vmAnswered).length/8*100)+'%';
+  document.getElementById('ad-prog').textContent = Object.keys(state.adAnswered).length+'/6';
+  document.getElementById('ad-bar').style.width = (Object.keys(state.adAnswered).length/6*100)+'%';
+}
+
+// ===== POWERSHELL EXERCISES =====
+const psExercises = [
+  {
+    id:'ps1', title:'Lister les services en cours', difficulty:'easy',
+    desc:'Écris une commande PowerShell pour lister tous les services Windows dont le statut est <strong>Running</strong>.',
+    hint:'Utilise Get-Service et filtre avec Where-Object sur la propriété Status.',
+    answers:['get-service | where-object {$_.status -eq "running"}','get-service | where {$_.status -eq "running"}','get-service | where-object status -eq running','get-service|where status -eq running'],
+    explanation:'<strong>Get-Service</strong> liste tous les services. Where-Object filtre avec le critère <strong>$_.Status -eq "Running"</strong>. L\'alias de Where-Object est <strong>where</strong> ou <strong>?</strong>.'
+  },
+  {
+    id:'ps2', title:'Redémarrer un service', difficulty:'easy',
+    desc:'Redémarre le service <strong>Print Spooler</strong> (spooler) en PowerShell.',
+    hint:'Utilise Restart-Service avec le nom du service.',
+    answers:['restart-service spooler','restart-service -name spooler'],
+    explanation:'<strong>Restart-Service spooler</strong> redémarre le service. Pour forcer sans confirmation : ajouter <strong>-Force</strong>. Équivalent à Stop-Service puis Start-Service.'
+  },
+  {
+    id:'ps3', title:'Obtenir les infos système', difficulty:'easy',
+    desc:'Affiche le nom de l\'ordinateur, le fabricant et le modèle avec une seule commande PowerShell.',
+    hint:'Get-ComputerInfo ou Get-WmiObject Win32_ComputerSystem.',
+    answers:['get-computerinfo','get-wmiobject win32_computersystem','get-ciminstance win32_computersystem'],
+    explanation:'<strong>Get-ComputerInfo</strong> (PS 5+) donne toutes les infos. <strong>Get-WmiObject Win32_ComputerSystem</strong> fonctionne aussi et affiche Manufacturer, Model, Name.'
+  },
+  {
+    id:'ps4', title:'Forcer la mise à jour des GPO', difficulty:'easy',
+    desc:'Un utilisateur se plaint que ses GPO ne s\'appliquent pas. Quelle commande forces-tu sur son poste ?',
+    hint:'Pense à la commande qui rafraîchit les stratégies de groupe.',
+    answers:['gpupdate /force','gpupdate'],
+    explanation:'<strong>gpupdate /force</strong> force la mise à jour immédiate de toutes les stratégies de groupe (GPO). Sans /force, seules les nouvelles GPO sont appliquées.'
+  },
+  {
+    id:'ps5', title:'Lister les utilisateurs AD désactivés', difficulty:'medium',
+    desc:'Avec le module ActiveDirectory, liste tous les comptes utilisateurs <strong>désactivés</strong> dans l\'AD.',
+    hint:'Get-ADUser -Filter avec la propriété Enabled.',
+    answers:['get-aduser -filter {enabled -eq $false}','get-aduser -filter * | where {$_.enabled -eq $false}','get-aduser -filter "enabled -eq \'false\'"'],
+    explanation:'<strong>Get-ADUser -Filter {Enabled -eq $false}</strong> retourne les comptes désactivés. On peut ajouter <strong>-Properties *</strong> pour tout afficher ou <strong>| Select Name,SamAccountName</strong> pour filtrer les colonnes.'
+  },
+  {
+    id:'ps6', title:'Vérifier la connectivité réseau', difficulty:'easy',
+    desc:'Teste la connectivité vers l\'IP <strong>8.8.8.8</strong> avec 4 paquets en PowerShell (équivalent ping).',
+    hint:'Test-Connection remplace ping en PowerShell.',
+    answers:['test-connection 8.8.8.8','test-connection 8.8.8.8 -count 4','test-netconnection 8.8.8.8'],
+    explanation:'<strong>Test-Connection</strong> est l\'équivalent PowerShell de ping. Par défaut 4 paquets. <strong>Test-NetConnection</strong> est plus complet (teste aussi les ports TCP).'
+  },
+  {
+    id:'ps7', title:'Exporter vers CSV', difficulty:'medium',
+    desc:'Liste tous les processus en cours et exporte le résultat dans <strong>C:\\temp\\procs.csv</strong>.',
+    hint:'Combine Get-Process avec Export-Csv.',
+    answers:['get-process | export-csv c:\\temp\\procs.csv','get-process | export-csv -path c:\\temp\\procs.csv -notypeinformation'],
+    explanation:'<strong>Export-Csv</strong> exporte des objets en fichier CSV. <strong>-NoTypeInformation</strong> supprime la première ligne avec le type .NET. Très utile pour créer des rapports.'
+  },
+  {
+    id:'ps8', title:'Rechercher dans les logs Windows', difficulty:'medium',
+    desc:'Affiche les 10 dernières erreurs du journal <strong>System</strong> avec Get-EventLog.',
+    hint:'Get-EventLog avec les paramètres -LogName, -EntryType et -Newest.',
+    answers:['get-eventlog -logname system -entrytype error -newest 10','get-eventlog system -entrytype error -newest 10'],
+    explanation:'<strong>Get-EventLog</strong> lit les journaux classiques (System, Application, Security). Pour les journaux modernes, utiliser <strong>Get-WinEvent</strong>. -Newest 10 = 10 entrées les plus récentes.'
+  }
+];
+
+function buildPSExercises() {
+  const container = document.getElementById('ps-exercises');
+  container.innerHTML = '';
+  psExercises.forEach((ex, i) => {
+    const div = document.createElement('div');
+    div.className = 'exercise-card scroll-fade';
+    div.style.animationDelay = (i*0.07)+'s';
+    div.innerHTML = `
+      <h3>${ex.title} <span class="difficulty ${ex.difficulty}">${ex.difficulty.toUpperCase()}</span></h3>
+      <div class="exercise-desc">${ex.desc}</div>
+      <div class="terminal">
+        <div class="terminal-header">
+          <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+          <span class="term-title">WINDOWS POWERSHELL — EXERCICE ${i+1}</span>
+        </div>
+        <div class="terminal-body">
+          <div class="term-prompt">
+            <span style="color:var(--green)">PS</span>
+            <span class="path">C:\\Windows\\System32</span>
+            <span class="sym">&gt;</span>
+            <input class="term-input" id="ps-input-${ex.id}" placeholder="Écris ta commande ici..." spellcheck="false" autocomplete="off"
+              onkeydown="if(event.key==='Enter') checkPS('${ex.id}')">
+          </div>
+          <div class="term-output" id="ps-output-${ex.id}"></div>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="toggleHint('hint-${ex.id}')">💡 Indice</button>
+      <div class="hint-text" id="hint-${ex.id}">${ex.hint}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function toggleHint(id) {
+  document.getElementById(id).classList.toggle('show');
+}
+
+function checkPS(id) {
+  const ex = psExercises.find(e => e.id === id);
+  const input = document.getElementById('ps-input-'+id);
+  const output = document.getElementById('ps-output-'+id);
+  const val = input.value.trim().toLowerCase();
+  const correct = ex.answers.some(a => val === a.toLowerCase() || val.includes(a.toLowerCase().split(' ')[0]));
+  const exactMatch = ex.answers.some(a => val === a.toLowerCase());
+
+  if (exactMatch || ex.answers.some(a => val.replace(/\s+/g,' ') === a.toLowerCase().replace(/\s+/g,' '))) {
+    output.className = 'term-output success';
+    output.textContent = '✓ Excellent ! Commande correcte.\n\n💡 ' + ex.explanation.replace(/<[^>]+>/g,'');
+    if (!state.psCompleted.has(id)) { state.psCompleted.add(id); addXP(15); }
+  } else if (val === '') {
+    output.textContent = '';
+  } else {
+    output.className = 'term-output error';
+    output.textContent = '✗ Pas tout à fait. Vérifie la syntaxe et réessaie.\n\nTa réponse : ' + input.value;
+  }
+}
+
+// ===== SQL EXERCISES =====
+const sqlExercises = [
+  {
+    id:'sql1', title:'Lister les bases de données', difficulty:'easy',
+    desc:'Affiche toutes les bases de données présentes sur le serveur SQL.',
+    query:'SELECT name FROM sys.databases ORDER BY name;',
+    result: {
+      cols:['name'],
+      rows:[['master'],['model'],['msdb'],['RH_DB'],['tempdb']]
+    },
+    hint:'Utilise sys.databases — une vue système qui liste toutes les BDD.',
+    answer:'select name from sys.databases',
+    explanation:'<strong>sys.databases</strong> est une vue catalogue SQL Server qui liste toutes les bases de données. <strong>sys.tables</strong> liste les tables d\'une BDD.'
+  },
+  {
+    id:'sql2', title:'Lister les utilisateurs connectés', difficulty:'easy',
+    desc:'Affiche les sessions actives sur SQL Server (login, statut, base de données utilisée).',
+    query:'SELECT session_id, login_name, status, database_id FROM sys.dm_exec_sessions WHERE is_user_process = 1;',
+    result: {
+      cols:['session_id','login_name','status','database_id'],
+      rows:[['52','DOMAIN\\jmartin','running','5'],['61','sa','sleeping','1']]
+    },
+    hint:'sys.dm_exec_sessions contient les sessions actives.',
+    answer:'select session_id, login_name, status from sys.dm_exec_sessions',
+    explanation:'<strong>sys.dm_exec_sessions</strong> liste toutes les sessions. <strong>is_user_process = 1</strong> filtre les connexions utilisateurs (exclut les process système internes).'
+  },
+  {
+    id:'sql3', title:'Vérifier l\'espace disque des BDD', difficulty:'medium',
+    desc:'Affiche le nom des bases de données et leur taille en MB depuis sys.master_files.',
+    query:'SELECT DB_NAME(database_id) AS [Nom BDD], SUM(size * 8 / 1024) AS [Taille MB]\nFROM sys.master_files\nGROUP BY database_id\nORDER BY [Taille MB] DESC;',
+    result: {
+      cols:['Nom BDD','Taille MB'],
+      rows:[['RH_DB','1240'],['master','120'],['msdb','80'],['model','12']]
+    },
+    hint:'sys.master_files + DB_NAME() + SUM avec GROUP BY.',
+    answer:'select db_name(database_id), sum(size',
+    explanation:'La taille est stockée en <strong>pages de 8 Ko</strong> dans sys.master_files. On multiplie par 8/1024 pour obtenir les MB. <strong>DB_NAME()</strong> convertit l\'ID en nom lisible.'
+  },
+  {
+    id:'sql4', title:'Rechercher un utilisateur applicatif', difficulty:'easy',
+    desc:'Dans la table <strong>Users</strong>, cherche tous les utilisateurs dont le login contient <strong>"jean"</strong>.',
+    query:"SELECT UserID, Login, Email, Department FROM Users WHERE Login LIKE '%jean%';",
+    result: {
+      cols:['UserID','Login','Email','Department'],
+      rows:[['42','jean.dupont','j.dupont@corp.fr','RH'],['87','jean-marc.petit','jm.petit@corp.fr','IT']]
+    },
+    hint:'Utilise LIKE avec les wildcards %.',
+    answer:'select',
+    explanation:'<strong>LIKE \'%jean%\'</strong> recherche "jean" n\'importe où dans la chaîne. <strong>%</strong> = n\'importe quels caractères. <strong>_</strong> = un seul caractère quelconque.'
+  },
+  {
+    id:'sql5', title:'Compter les incidents par priorité', difficulty:'medium',
+    desc:'Dans la table <strong>Incidents</strong>, compte le nombre d\'incidents par <strong>Priority</strong>, triés du plus critique au moins critique.',
+    query:'SELECT Priority, COUNT(*) AS NbIncidents FROM Incidents GROUP BY Priority ORDER BY Priority ASC;',
+    result: {
+      cols:['Priority','NbIncidents'],
+      rows:[['P1 - Critique','3'],['P2 - Haute','12'],['P3 - Normale','45'],['P4 - Basse','89']]
+    },
+    hint:'COUNT(*) + GROUP BY + ORDER BY.',
+    answer:'select priority, count(',
+    explanation:'<strong>COUNT(*)</strong> compte les lignes. <strong>GROUP BY</strong> regroupe par valeur unique. <strong>ORDER BY</strong> trie. Cette requête est typique du monitoring ITSM pour voir la répartition des incidents.'
+  },
+  {
+    id:'sql6', title:'Vérifier les connexions récentes', difficulty:'medium',
+    desc:'Affiche les 5 dernières connexions réussies depuis la table <strong>AuditLog</strong> (colonnes: UserLogin, Action, EventDate).',
+    query:"SELECT TOP 5 UserLogin, Action, EventDate FROM AuditLog WHERE Action = 'LOGIN_SUCCESS' ORDER BY EventDate DESC;",
+    result: {
+      cols:['UserLogin','Action','EventDate'],
+      rows:[['admin','LOGIN_SUCCESS','2024-01-15 09:42:11'],['j.martin','LOGIN_SUCCESS','2024-01-15 09:31:05'],['p.durand','LOGIN_SUCCESS','2024-01-15 08:55:22']]
+    },
+    hint:'TOP 5 + WHERE + ORDER BY EventDate DESC.',
+    answer:'select top 5',
+    explanation:'<strong>TOP N</strong> limite le nombre de résultats (SQL Server). En MySQL c\'est <strong>LIMIT N</strong>. <strong>ORDER BY EventDate DESC</strong> trie du plus récent au plus ancien. Utile pour l\'audit de sécurité.'
+  }
+];
+
+function buildSQLExercises() {
+  const container = document.getElementById('sql-exercises');
+  container.innerHTML = '';
+  sqlExercises.forEach((ex, i) => {
+    const rows = ex.result.rows.map(r => `<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('');
+    const headers = ex.result.cols.map(c=>`<th>${c}</th>`).join('');
+    const div = document.createElement('div');
+    div.className = 'exercise-card scroll-fade';
+    div.style.animationDelay = (i*0.07)+'s';
+    div.innerHTML = `
+      <h3>${ex.title} <span class="difficulty ${ex.difficulty}">${ex.difficulty.toUpperCase()}</span></h3>
+      <div class="exercise-desc">${ex.desc}</div>
+      <div class="sql-editor">
+        <div class="sql-editor-header">
+          <span class="sql-label">📝 SQL EDITOR</span>
+          <button class="sql-run-btn" onclick="checkSQL('${ex.id}')">▶ Exécuter</button>
+        </div>
+        <textarea class="sql-textarea" id="sql-input-${ex.id}" placeholder="Écris ta requête SQL ici..." spellcheck="false"></textarea>
+      </div>
+      <button class="hint-btn" onclick="toggleHint('sqlhint-${ex.id}')">💡 Indice</button>
+      <div class="hint-text" id="sqlhint-${ex.id}">${ex.hint}</div>
+      <div id="sql-output-${ex.id}" class="sql-result" style="display:none"></div>
+      <div style="margin-top:16px">
+        <div class="section-title" style="font-size:10px">Résultat attendu</div>
+        <div class="sql-result"><table><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table></div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function checkSQL(id) {
+  const ex = sqlExercises.find(e => e.id === id);
+  const input = document.getElementById('sql-input-'+id).value.trim().toLowerCase();
+  const output = document.getElementById('sql-output-'+id);
+  output.style.display = 'block';
+  if (input.includes(ex.answer.toLowerCase()) || input.includes('select')) {
+    const rows = ex.result.rows.map(r => `<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('');
+    const headers = ex.result.cols.map(c=>`<th>${c}</th>`).join('');
+    output.innerHTML = `<span style="color:var(--green)">✓ Requête valide ! Résultat simulé :</span><br><br><table><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>
+    <br><span style="color:var(--accent)">💡 ${ex.explanation.replace(/<[^>]+>/g,'')}</span>`;
+    if (!state.sqlCompleted.has(id)) { state.sqlCompleted.add(id); addXP(20); }
+  } else {
+    output.innerHTML = '<span style="color:var(--red)">✗ Requête incorrecte ou incomplète. Utilise SELECT pour commencer.</span>';
+  }
+}
+
+// ===== QCM DATA =====
+const networkQCM = [
+  {
+    q:"Quelle est la principale différence entre un LAN et un WAN ?",
+    cat:"LAN / WAN",
+    options:["Un LAN est sans fil, un WAN est filaire","Un LAN couvre une zone locale (bâtiment), un WAN couvre une grande distance","Un LAN utilise TCP/IP, un WAN utilise UDP","Un LAN est géré par l'entreprise, un WAN est toujours public"],
+    correct:1,
+    explanation:"Un <strong>LAN (Local Area Network)</strong> couvre une zone géographique restreinte (bureau, bâtiment). Un <strong>WAN (Wide Area Network)</strong> relie des sites distants (villes, pays). Internet est le plus grand WAN public."
+  },
+  {
+    q:"Un utilisateur ne peut pas communiquer avec des machines d'un autre VLAN. Quelle est la cause la plus probable ?",
+    cat:"VLAN",
+    options:["Le câble réseau est défectueux","L'adresse MAC est incorrecte","Il manque un routeur ou une interface L3 pour l'inter-VLAN routing","Le switch est éteint"],
+    correct:2,
+    explanation:"Les VLANs isolent le trafic réseau. Pour qu'ils communiquent entre eux, il faut du <strong>routage inter-VLAN</strong> via un routeur, un switch L3, ou une interface SVI. C'est un principe fondamental de sécurité réseau."
+  },
+  {
+    q:"Quelle commande Windows permet de voir l'adresse IP et le masque de sous-réseau d'une machine ?",
+    cat:"Diagnostic",
+    options:["ipconfig","netstat","ping","tracert"],
+    correct:0,
+    explanation:"<strong>ipconfig</strong> affiche la configuration réseau (IP, masque, gateway). <strong>ipconfig /all</strong> donne plus de détails (MAC, DNS, DHCP). C'est la première commande de diagnostic réseau N1."
+  },
+  {
+    q:"À quoi sert le protocole DHCP ?",
+    cat:"Protocoles",
+    options:["Résoudre les noms de domaine en adresses IP","Attribuer automatiquement des adresses IP aux clients","Chiffrer les communications réseau","Gérer les routes entre routeurs"],
+    correct:1,
+    explanation:"<strong>DHCP (Dynamic Host Configuration Protocol)</strong> attribue automatiquement une IP, un masque, une gateway et des serveurs DNS aux clients. Sans DHCP, chaque poste doit être configuré manuellement."
+  },
+  {
+    q:"Un utilisateur a une IP en 169.254.x.x. Qu'est-ce que cela indique ?",
+    cat:"Diagnostic",
+    options:["L'adresse IP est correctement configurée","Le serveur DHCP est inaccessible (APIPA)","La machine est connectée en IPv6","L'adresse est réservée pour les VPNs"],
+    correct:1,
+    explanation:"<strong>169.254.x.x</strong> = APIPA (Automatic Private IP Addressing). Windows s'attribue cette IP quand il ne trouve pas de serveur DHCP. Solution : vérifier la connectivité au serveur DHCP, redémarrer la carte réseau ou le service DHCP."
+  },
+  {
+    q:"Quelle est la fonction principale d'un switch ?",
+    cat:"Switching",
+    options:["Connecter des réseaux différents (routing)","Commuter des trames entre ports du même réseau (couche 2)","Filtrer le trafic Internet (firewall)","Attribuer des adresses IP (DHCP)"],
+    correct:1,
+    explanation:"Un <strong>switch opère en couche 2</strong> (liaison de données) du modèle OSI. Il apprend les adresses MAC et commute les trames vers le bon port. Contrairement au hub qui diffuse à tous, le switch envoie uniquement au destinataire."
+  },
+  {
+    q:"Quelle commande permet de tracer le chemin des paquets vers une destination ?",
+    cat:"Diagnostic",
+    options:["ping","nslookup","tracert (Windows) / traceroute (Linux)","netstat"],
+    correct:2,
+    explanation:"<strong>tracert</strong> (Windows) / <strong>traceroute</strong> (Linux) affiche tous les sauts (routers) entre la machine et la destination. Utile pour localiser un problème réseau. ping teste juste la connectivité."
+  },
+  {
+    q:"Qu'est-ce qu'un VLAN trunk ?",
+    cat:"VLAN",
+    options:["Un VLAN de gestion du switch","Un lien qui transporte le trafic de plusieurs VLANs entre switches","Un VLAN réservé à la voix (VoIP)","Un protocole de sécurité réseau"],
+    correct:1,
+    explanation:"Un <strong>port trunk</strong> transporte le trafic de plusieurs VLANs sur un seul câble entre switches ou vers un routeur. Les trames sont taguées avec l'ID VLAN (<strong>802.1Q</strong>). Les ports access, eux, appartiennent à un seul VLAN."
+  },
+  {
+    q:"Quelle plage d'adresses IP est réservée aux réseaux privés (RFC 1918) ?",
+    cat:"Adressage",
+    options:["1.0.0.0 – 1.255.255.255","10.0.0.0 – 10.255.255.255, 172.16.0.0 – 172.31.255.255, 192.168.0.0 – 192.168.255.255","8.8.0.0 – 8.8.255.255","100.0.0.0 – 100.255.255.255"],
+    correct:1,
+    explanation:"Les <strong>RFC 1918</strong> définit 3 plages privées non routables sur Internet : <strong>10.0.0.0/8</strong>, <strong>172.16.0.0/12</strong>, et <strong>192.168.0.0/16</strong>. Ces IPs sont utilisées en interne et nécessitent un NAT pour accéder à Internet."
+  },
+  {
+    q:"Un poste peut pinger sa passerelle par défaut mais pas Internet. Quelle est la cause probable ?",
+    cat:"Diagnostic",
+    options:["Problème de carte réseau physique","Problème au niveau du routeur ou au-delà (FAI, DNS)","Problème de VLAN","Adresse MAC incorrecte"],
+    correct:1,
+    explanation:"Si le poste atteint la gateway mais pas Internet, le problème est <strong>au-delà du réseau local</strong> : routeur mal configuré, problème FAI, DNS en panne, ou ACL bloquante. Étape suivante : tester avec une IP publique (8.8.8.8) pour isoler DNS vs connectivité."
+  },
+  {
+    q:"Quelle est la différence entre la couche 2 et la couche 3 du modèle OSI ?",
+    cat:"Modèle OSI",
+    options:["Couche 2 = IP, Couche 3 = MAC","Couche 2 = liaison de données (MAC), Couche 3 = réseau (IP, routage)","Couche 2 = transport, Couche 3 = session","Il n'y a pas de différence pour un technicien N1"],
+    correct:1,
+    explanation:"<strong>Couche 2 (Liaison)</strong> : adresses MAC, switches, trames. <strong>Couche 3 (Réseau)</strong> : adresses IP, routeurs, paquets. Un switch L2 ne regarde que les MACs. Un routeur (L3) utilise les IPs pour acheminer le trafic."
+  },
+  {
+    q:"Qu'est-ce qu'un WLAN ?",
+    cat:"WLAN",
+    options:["Un réseau filaire d'entreprise","Un réseau local sans fil (Wi-Fi)","Un réseau étendu crypté","Un protocole de routage"],
+    correct:1,
+    explanation:"<strong>WLAN (Wireless LAN)</strong> = réseau local sans fil, communément appelé Wi-Fi. Il utilise les standards <strong>IEEE 802.11</strong> (802.11ac/Wi-Fi 5, 802.11ax/Wi-Fi 6). Le support N1 inclut souvent la résolution de problèmes Wi-Fi (signal, mot de passe, SSID)."
+  }
+];
+
+const itilQCM = [
+  {
+    q:"Dans ITIL, quelle est la différence entre un Incident et un Problème ?",
+    cat:"Gestion des incidents",
+    options:["Aucune différence, ce sont des synonymes","Un incident est une interruption non planifiée, un problème est la cause racine d'incidents","Un problème est plus urgent qu'un incident","Un incident concerne le matériel, un problème concerne le logiciel"],
+    correct:1,
+    explanation:"<strong>Incident</strong> : interruption non planifiée d'un service (ex: poste qui ne démarre pas). <strong>Problème</strong> : cause racine d'un ou plusieurs incidents (ex: faille dans le firmware). La gestion des problèmes cherche à éliminer la cause pour éviter la récurrence."
+  },
+  {
+    q:"Qu'est-ce qu'un SLA (Service Level Agreement) ?",
+    cat:"SLA",
+    options:["Un contrat entre le service IT et les utilisateurs définissant les niveaux de service","Un outil de ticketing comme EasyVista","Un protocole réseau pour la qualité de service","Un rapport mensuel d'incidents"],
+    correct:0,
+    explanation:"Un <strong>SLA</strong> est un accord formel définissant les niveaux de service attendus : temps de réponse, disponibilité, temps de résolution par priorité. Ex: P1 = réponse en 15min, résolution en 4h. C'est la base contractuelle du support IT."
+  },
+  {
+    q:"Dans le contexte ITIL, qu'est-ce qu'une CMDB ?",
+    cat:"CMDB",
+    options:["Une base de données des incidents passés","Une base de connaissances des solutions connues","Une base de données de gestion de configuration (actifs IT et leurs relations)","Un outil de monitoring réseau"],
+    correct:2,
+    explanation:"La <strong>CMDB (Configuration Management Database)</strong> référence tous les actifs IT (Configuration Items / CIs) et leurs relations. Elle permet de savoir quel serveur héberge quelle application, quel PC appartient à quel utilisateur, etc."
+  },
+  {
+    q:"Un utilisateur appelle : son PC ne s'allume plus. Selon ITIL, quelle est la première action ?",
+    cat:"Support N1",
+    options:["Escalader immédiatement en N2","Ouvrir un ticket, qualifier l'incident, collecter les informations","Remplacer le PC directement","Appeler le constructeur du PC"],
+    correct:1,
+    explanation:"ITIL préconise : 1) <strong>Enregistrer le ticket</strong>, 2) <strong>Qualifier l'incident</strong> (priorité, impact, urgence), 3) Collecter les infos (depuis quand, quoi de changé récemment). Le N1 tente la résolution avant d'escalader."
+  },
+  {
+    q:"Que signifie le terme 'escalade' dans le support IT ITIL ?",
+    cat:"Escalades",
+    options:["Augmenter la priorité d'un ticket","Transférer un incident à un niveau de support supérieur car le N1 ne peut pas le résoudre","Fermer un ticket sans résolution","Notifier l'utilisateur de l'état de son ticket"],
+    correct:1,
+    explanation:"<strong>L'escalade fonctionnelle</strong> = transfert vers un niveau de compétence supérieur (N1→N2→N3). <strong>L'escalade hiérarchique</strong> = remontée managériale (incident critique, SLA en risque). EasyVista gère ces workflows d'escalade automatiquement."
+  },
+  {
+    q:"Qu'est-ce qu'un changement 'standard' dans ITIL ?",
+    cat:"Gestion des changements",
+    options:["Un changement nécessitant une approbation du CAB","Un changement pré-approuvé, routinier et à faible risque","Un changement d'urgence","Un changement refusé par le comité"],
+    correct:1,
+    explanation:"<strong>Changement standard</strong> : pré-autorisé, faible risque, procédure connue (ex: création de compte AD). <strong>Changement normal</strong> : nécessite approbation du CAB. <strong>Changement d'urgence</strong> : procédure accélérée pour incidents critiques."
+  },
+  {
+    q:"Quel outil est mentionné dans l'offre d'emploi pour la gestion des tickets ?",
+    cat:"Outils ITSM",
+    options:["ServiceNow","Jira Service Management","EasyVista","Remedy"],
+    correct:2,
+    explanation:"<strong>EasyVista</strong> est un outil ITSM (IT Service Management) français. Il gère les incidents, demandes, changements et la CMDB selon les principes ITIL. D'autres outils similaires : ServiceNow, Jira SM, Freshservice, Remedy."
+  },
+  {
+    q:"Quelle est la différence entre l'urgence et l'impact dans la prioritisation ITIL ?",
+    cat:"Prioritisation",
+    options:["Ce sont les mêmes critères","L'urgence = vitesse de dégradation, l'impact = nombre d'utilisateurs/services affectés","L'impact = vitesse de dégradation, l'urgence = nombre d'utilisateurs","La priorité est calculée uniquement sur l'impact"],
+    correct:1,
+    explanation:"<strong>Impact</strong> : combien d'utilisateurs/services sont affectés. <strong>Urgence</strong> : à quelle vitesse le problème se dégrade-t-il. La <strong>Priorité = f(Impact, Urgence)</strong>. Un PDG sans PC = impact faible mais urgence maximale."
+  },
+  {
+    q:"Qu'est-ce qu'une workaround (solution de contournement) dans ITIL ?",
+    cat:"Gestion des incidents",
+    options:["La solution définitive à un incident","Une mesure temporaire pour restaurer le service sans résoudre la cause racine","Un type de changement d'urgence","Une procédure de backup"],
+    correct:1,
+    explanation:"Un <strong>workaround</strong> restaure le service rapidement sans corriger la cause (ex: redémarrer un service planté). Il permet de respecter le SLA. La résolution définitive peut venir après, via la gestion des problèmes."
+  },
+  {
+    q:"Dans ITIL 4, que représente la chaîne de valeur des services (SVC) ?",
+    cat:"ITIL 4",
+    options:["Une liste des services IT disponibles","Un modèle opérationnel montrant comment les activités créent de la valeur","Le catalogue de services","Les SLAs par service"],
+    correct:1,
+    explanation:"La <strong>Service Value Chain (SVC)</strong> d'ITIL 4 comporte 6 activités : Planifier, Améliorer, Impliquer, Concevoir/Transitionner, Obtenir/Construire, Livrer/Soutenir. C'est le cœur du modèle opérationnel ITIL 4, remplaçant les processus rigides d'ITIL v3."
+  }
+];
+
+const vmwareQCM = [
+  {
+    q:"Dans VMware vSphere, qu'est-ce qu'un snapshot ?",
+    cat:"VMware",
+    options:["Une sauvegarde complète d'une VM","Un point de restauration capturant l'état d'une VM à un instant T","Une copie de la VM vers un autre hôte","Un type de stockage réseau"],
+    correct:1,
+    explanation:"Un <strong>snapshot</strong> capture l'état (mémoire, disque, configuration) d'une VM à un instant précis. Utile avant une mise à jour risquée. Attention : ce n'est pas une sauvegarde ! Les snapshots sont différentiels et peuvent croître en taille. Toujours les supprimer après usage."
+  },
+  {
+    q:"Un utilisateur se connecte via Citrix et son application s'ouvre très lentement. Quelle est la première vérification à effectuer ?",
+    cat:"Citrix",
+    options:["Remplacer la VM immédiatement","Vérifier les ressources de la VM (CPU, RAM) et la bande passante réseau","Réinstaller Citrix Receiver","Appeler le fournisseur Citrix"],
+    correct:1,
+    explanation:"En support Citrix côté utilisateur, vérifier d'abord : <strong>ressources CPU/RAM de la VM</strong>, <strong>bande passante réseau</strong>, charge du serveur Citrix. Demander si le problème est récent ou systématique. Si OK côté VM, vérifier la connexion locale de l'utilisateur."
+  },
+  {
+    q:"Quelle est la différence entre une VM et un conteneur (ex: Docker) ?",
+    cat:"Virtualisation",
+    options:["Il n'y a aucune différence","Une VM virtualise le matériel complet avec un OS, un conteneur partage le noyau de l'OS hôte","Un conteneur est plus lourd qu'une VM","Les VMs sont plus rapides que les conteneurs"],
+    correct:1,
+    explanation:"Une <strong>VM</strong> inclut un OS complet (noyau inclus), plus lourd mais isolé. Un <strong>conteneur</strong> partage le noyau de l'hôte, plus léger et rapide à démarrer. Pour le support N1/N2, les VMs sont le standard (VMware, Hyper-V). Les conteneurs sont plutôt DevOps/cloud."
+  },
+  {
+    q:"Qu'est-ce que vMotion dans VMware vSphere ?",
+    cat:"VMware",
+    options:["Un type de snapshot","La migration d'une VM en cours d'exécution d'un hôte à un autre sans interruption","Un protocole de sauvegarde","Un outil de monitoring"],
+    correct:1,
+    explanation:"<strong>vMotion</strong> permet de migrer une VM en cours d'exécution vers un autre hôte ESXi <strong>sans interruption de service</strong>. Utilisé pour la maintenance des hôtes (mise à jour, remplacement matériel). <strong>Storage vMotion</strong> fait pareil pour le stockage."
+  },
+  {
+    q:"Un utilisateur VMware Horizon ne peut pas accéder à son bureau virtuel. Que vérifies-tu en premier (côté support N1) ?",
+    cat:"Support virtualisé",
+    options:["Reconstruire immédiatement le profil utilisateur","Vérifier la connexion réseau de l'utilisateur, l'état du service Horizon, et les crédentials","Redémarrer tous les serveurs","Escalader directement en N3"],
+    correct:1,
+    explanation:"Démarche N1 : 1) <strong>Réseau</strong> (l'utilisateur peut-il pinger le serveur ?) 2) <strong>Crédentials</strong> (bon mot de passe ?) 3) <strong>État du service</strong> (Horizon Connection Server UP ?) 4) Autres utilisateurs affectés ? Si problème global → N2/N3."
+  },
+  {
+    q:"Qu'est-ce qu'un hyperviseur de type 1 ?",
+    cat:"Virtualisation",
+    options:["Un hyperviseur qui s'installe comme un logiciel sur Windows","Un hyperviseur qui s'exécute directement sur le matériel (bare-metal)","Un type de VM légère","Un protocole de virtualisation réseau"],
+    correct:1,
+    explanation:"<strong>Type 1 (bare-metal)</strong> : s'exécute directement sur le matériel. Ex: <strong>VMware ESXi</strong>, Microsoft Hyper-V, Citrix XenServer. <strong>Type 2 (hosted)</strong> : s'installe sur un OS existant. Ex: VMware Workstation, VirtualBox. En entreprise, on utilise quasi-exclusivement le type 1."
+  },
+  {
+    q:"Lors d'un support sur un poste Citrix, l'utilisateur voit 'Ressources insuffisantes'. Quelle est la cause probable ?",
+    cat:"Citrix",
+    options:["Son PC local manque de RAM","Le serveur Citrix manque de ressources CPU/RAM disponibles","Sa connexion Internet est trop lente","Son profil Windows est corrompu"],
+    correct:1,
+    explanation:"L'erreur 'Ressources insuffisantes' vient du <strong>serveur Citrix</strong> qui n'a plus assez de CPU ou RAM pour ouvrir une nouvelle session. Le support N1 doit alerter les admins N2/N3 pour libérer des ressources ou équilibrer la charge."
+  },
+  {
+    q:"Qu'est-ce qu'un datastore dans VMware ?",
+    cat:"VMware",
+    options:["Un serveur de base de données","Un espace de stockage où sont conservés les fichiers des VMs (vmdk, vmx)","Un type de réseau virtuel","Un serveur de sauvegarde"],
+    correct:1,
+    explanation:"Un <strong>datastore</strong> est l'espace de stockage logique dans vSphere où sont stockés les fichiers des VMs : <strong>.vmdk</strong> (disque virtuel), <strong>.vmx</strong> (configuration), snapshots. Il peut reposer sur du SAN, NAS (NFS) ou stockage local."
+  }
+];
+
+const adQCM = [
+  {
+    q:"Un utilisateur ne peut plus se connecter à son PC. Son compte est dans l'AD. Quelle est la première vérification ?",
+    cat:"Active Directory",
+    options:["Réinstaller Windows sur son PC","Vérifier si le compte est verrouillé ou désactivé dans l'AD","Remplacer le PC","Appeler Microsoft"],
+    correct:1,
+    explanation:"En N1, la première vérification AD est : <strong>compte verrouillé</strong> (trop de mauvais mots de passe) ou <strong>compte désactivé</strong>. Dans ADUC (Active Directory Users & Computers), chercher l'utilisateur → clic droit → Unlock Account si verrouillé, ou Enable si désactivé."
+  },
+  {
+    q:"Quelle est la commande PowerShell pour déverrouiller un compte AD ?",
+    cat:"Active Directory",
+    options:["Unlock-ADAccount -Identity username","Enable-ADAccount -Identity username","Reset-ADAccount -Identity username","Restore-ADAccount -Identity username"],
+    correct:0,
+    explanation:"<strong>Unlock-ADAccount -Identity username</strong> déverrouille un compte bloqué. <strong>Enable-ADAccount</strong> réactive un compte désactivé. <strong>Set-ADAccountPassword</strong> réinitialise le mot de passe. Ces commandes nécessitent le module ActiveDirectory."
+  },
+  {
+    q:"Qu'est-ce qu'une GPO (Group Policy Object) ?",
+    cat:"GPO",
+    options:["Un groupe d'utilisateurs dans l'AD","Un ensemble de paramètres de configuration appliqués à des utilisateurs ou ordinateurs via l'AD","Un protocole de sécurité réseau","Un type de licence logicielle"],
+    correct:1,
+    explanation:"Une <strong>GPO</strong> est un ensemble de configurations (sécurité, logiciels, bureau, restrictions) appliquées automatiquement aux ordinateurs ou utilisateurs d'une OU (Organizational Unit). Exemple : imposer un fond d'écran, bloquer USB, déployer un logiciel."
+  },
+  {
+    q:"Qu'est-ce qu'une OU (Organizational Unit) dans l'Active Directory ?",
+    cat:"Active Directory",
+    options:["Un groupe de sécurité pour gérer les droits","Un conteneur AD pour organiser les objets (users, PC, groupes) et appliquer des GPOs","Un serveur de contrôle de domaine","Un type de licence Microsoft"],
+    correct:1,
+    explanation:"Une <strong>OU</strong> est un conteneur hiérarchique dans l'AD. Elle sert à organiser les objets (users, computers, groupes) par département, site, ou fonction. Les GPOs s'appliquent au niveau des OUs. Ex: OU=RH, OU=IT, OU=Comptabilité."
+  },
+  {
+    q:"Un utilisateur ne peut pas accéder à un dossier partagé réseau. Son compte AD est actif. Que vérifies-tu ?",
+    cat:"Droits et permissions",
+    options:["Reinstaller son OS","Vérifier les droits NTFS et les permissions de partage sur le dossier","Désactiver le pare-feu Windows","Vider la CMDB"],
+    correct:1,
+    explanation:"Pour l'accès aux dossiers partagés, deux niveaux de permissions coexistent : <strong>permissions de partage</strong> (SMB) et <strong>permissions NTFS</strong>. L'accès effectif = le plus restrictif des deux. Vérifier aussi si l'utilisateur est dans le bon <strong>groupe AD</strong> qui a accès."
+  },
+  {
+    q:"Qu'est-ce qu'un contrôleur de domaine (DC) dans un réseau Windows ?",
+    cat:"Active Directory",
+    options:["Un PC puissant utilisé par les développeurs","Un serveur qui gère l'authentification, les politiques et la base de données AD","Un routeur principal de l'entreprise","Un serveur de fichiers"],
+    correct:1,
+    explanation:"Le <strong>Domain Controller (DC)</strong> est le serveur central qui héberge l'Active Directory. Il authentifie les connexions, applique les GPOs et gère les ressources du domaine. Dans une infra de taille moyenne, il y a toujours au moins 2 DCs pour la redondance (PDC + BDC)."
+  }
+];
+
+// ===== BUILD QCM =====
+function buildQCM(data, containerId, stateKey, correctKey) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  data.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'qcm-card scroll-fade';
+    div.style.animationDelay = (i*0.06)+'s';
+    const letters = ['A','B','C','D'];
+    const opts = item.options.map((opt,j) => `
+      <button class="option-btn" id="opt-${containerId}-${i}-${j}" onclick="answerQCM('${containerId}',${i},${j},${item.correct},'${stateKey}','${correctKey}')">
+        <span class="option-letter">${letters[j]}</span>
+        ${opt}
+      </button>
+    `).join('');
+    div.innerHTML = `
+      <div class="qcm-category">${item.cat}</div>
+      <div class="qcm-question">Q${i+1}. ${item.q}</div>
+      <div class="qcm-options">${opts}</div>
+      <div class="explanation" id="exp-${containerId}-${i}">💡 ${item.explanation}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function answerQCM(containerId, qIdx, chosen, correct, stateKey, correctKey) {
+  const key = `${qIdx}`;
+  if (state[stateKey][key] !== undefined) return;
+  state[stateKey][key] = chosen;
+  const isCorrect = chosen === correct;
+  if (isCorrect) { state[correctKey]++; addXP(10); }
+  const opts = document.querySelectorAll(`[id^="opt-${containerId}-${qIdx}-"]`);
+  opts.forEach((btn, j) => {
+    btn.disabled = true;
+    if (j === correct) btn.classList.add('correct');
+    else if (j === chosen && !isCorrect) btn.classList.add('wrong');
+  });
+  document.getElementById(`exp-${containerId}-${qIdx}`).classList.add('show');
+  updateDashboard();
+
+  // Update score display
+  const total = Object.keys(state[stateKey]).length;
+  const scoreEl = document.getElementById(containerId.replace('-qcm','').replace('network','net').replace('itil','itil') + '-final-score');
+  const displayEl = document.getElementById(containerId.replace('-qcm','').replace('network','net').replace('itil','itil') + '-score-display');
+  if (scoreEl) { scoreEl.textContent = state[correctKey] + '/' + total; }
+  if (displayEl && total > 0) displayEl.style.display = 'flex';
+}
+
+// ===== CHEAT SHEETS =====
+const cheatPS = [
+  {title:'Gestion des services', code: `<span>Get-Service</span>               # Lister les services\n<span>Get-Service -Name spooler</span>  # Service spécifique\n<span>Start-Service spooler</span>      # Démarrer\n<span>Stop-Service spooler</span>       # Arrêter\n<span>Restart-Service spooler</span>    # Redémarrer`},
+  {title:'Active Directory', code: `<span>Get-ADUser -Identity jmartin</span>\n<span>Unlock-ADAccount -Identity jmartin</span>\n<span>Enable-ADAccount -Identity jmartin</span>\n<span>Set-ADAccountPassword -Identity jmartin</span>\n<span>Get-ADUser -Filter {Enabled -eq $false}</span>`},
+  {title:'Réseau & Connectivité', code: `<span>Test-Connection 8.8.8.8</span>       # Ping\n<span>Test-NetConnection -Port 80</span>   # Test port\n<span>ipconfig /all</span>                  # Config IP\n<span>Get-NetAdapter</span>                 # Cartes réseau\n<span>Resolve-DnsName google.com</span>    # DNS lookup`},
+  {title:'Système & Diagnostics', code: `<span>Get-ComputerInfo</span>                     # Infos système\n<span>Get-EventLog -LogName System -Newest 10</span>\n<span>Get-Process | Sort CPU -Desc</span>\n<span>gpupdate /force</span>                     # Forcer GPO\n<span>Get-HotFix | Sort InstalledOn -Desc</span>`},
+  {title:'Fichiers & Export', code: `<span>Get-Process | Export-Csv C:\\procs.csv</span>\n<span>Get-Content C:\\log.txt | Select -Last 20</span>\n<span>Copy-Item source dest</span>\n<span>Remove-Item C:\\temp\\* -Recurse</span>\n<span>Get-ChildItem -Recurse -Filter *.log</span>`},
+  {title:'Boucles & Filtres', code: `<span>Get-Service | Where-Object {$_.Status -eq "Running"}</span>\n<span>Get-Process | Where CPU -gt 50</span>\n<span>1..5 | ForEach-Object { "Item $_" }</span>\n<span>Get-ADUser -Filter * | Select Name,Email</span>`}
+];
+
+const cheatSQL = [
+  {title:'Requêtes de base', code: `<span>SELECT * FROM Table</span>\n<span>SELECT col1, col2 FROM Table WHERE cond</span>\n<span>SELECT TOP 10 * FROM Table ORDER BY col DESC</span>\n<span>SELECT DISTINCT col FROM Table</span>`},
+  {title:'Filtres et conditions', code: `<span>WHERE col = 'valeur'</span>\n<span>WHERE col LIKE '%partiel%'</span>\n<span>WHERE col IN ('A','B','C')</span>\n<span>WHERE col BETWEEN 10 AND 50</span>\n<span>WHERE col IS NULL / IS NOT NULL</span>`},
+  {title:'Agrégation', code: `<span>SELECT col, COUNT(*) AS total FROM T GROUP BY col</span>\n<span>SELECT AVG(col), MAX(col), MIN(col) FROM T</span>\n<span>HAVING COUNT(*) > 5</span>   <span style="color:var(--text-dim)">-- filtre après GROUP BY</span>`},
+  {title:'Vues système SQL Server', code: `<span>SELECT * FROM sys.databases</span>          <span style="color:var(--text-dim)">-- BDDs</span>\n<span>SELECT * FROM sys.tables</span>              <span style="color:var(--text-dim)">-- Tables</span>\n<span>SELECT * FROM sys.dm_exec_sessions</span>    <span style="color:var(--text-dim)">-- Sessions</span>\n<span>SELECT * FROM sys.master_files</span>        <span style="color:var(--text-dim)">-- Fichiers BDD</span>`},
+  {title:'Jointures', code: `<span>INNER JOIN</span>  <span style="color:var(--text-dim)">-- lignes communes</span>\n<span>LEFT JOIN</span>   <span style="color:var(--text-dim)">-- toutes lignes gauche</span>\n<span>SELECT u.Name, d.Dept FROM Users u\n  JOIN Departments d ON u.DeptID = d.ID</span>`}
+];
+
+const cheatNet = [
+  {title:'Commandes diagnostic Windows', code: `<span>ipconfig /all</span>         <span style="color:var(--text-dim)">-- Config réseau complète</span>\n<span>ping 8.8.8.8</span>          <span style="color:var(--text-dim)">-- Test connectivité</span>\n<span>tracert 8.8.8.8</span>       <span style="color:var(--text-dim)">-- Trace de route</span>\n<span>nslookup google.com</span>   <span style="color:var(--text-dim)">-- Résolution DNS</span>\n<span>netstat -ano</span>          <span style="color:var(--text-dim)">-- Connexions actives</span>\n<span>arp -a</span>                <span style="color:var(--text-dim)">-- Table ARP</span>`},
+  {title:'Plages IP privées (RFC 1918)', code: `10.0.0.0    – 10.255.255.255   (/8)\n172.16.0.0  – 172.31.255.255  (/12)\n192.168.0.0 – 192.168.255.255 (/16)\n\n<span style="color:var(--text-dim)">169.254.x.x = APIPA (pas de DHCP !)</span>`},
+  {title:'Modèle OSI simplifié', code: `<span>7</span> Application  -- HTTP, FTP, DNS\n<span>6</span> Présentation -- SSL/TLS, chiffrement\n<span>5</span> Session      -- NetBIOS, RPC\n<span>4</span> Transport    -- TCP, UDP (ports)\n<span>3</span> Réseau       -- IP, ICMP (routeurs)\n<span>2</span> Liaison      -- MAC, Ethernet (switches)\n<span>1</span> Physique     -- Câbles, Wi-Fi`},
+  {title:'VLAN Cheat Sheet', code: `<span style="color:var(--text-dim)">-- Port ACCESS : 1 VLAN, postes/imprimantes</span>\n<span style="color:var(--text-dim)">-- Port TRUNK : N VLANs, liens inter-switches</span>\n<span style="color:var(--text-dim)">-- Tag 802.1Q : identifie le VLAN dans la trame</span>\n<span style="color:var(--text-dim)">-- VLAN natif : trafic non tagué sur trunk</span>\n<span style="color:var(--text-dim)">-- Inter-VLAN : nécessite routage (L3/routeur)</span>`}
+];
+
+const cheatITIL = [
+  {title:'Cycle de vie incident ITIL', code: `1. <span>Identification</span>   -- Détection incident\n2. <span>Enregistrement</span>  -- Ticket + qualification\n3. <span>Catégorisation</span>  -- Type, service impacté\n4. <span>Priorisation</span>    -- Impact × Urgence\n5. <span>Diagnostic</span>      -- Investigation N1\n6. <span>Escalade</span>        -- Si N1 ne peut résoudre\n7. <span>Résolution</span>      -- Fix + validation user\n8. <span>Clôture</span>         -- Ticket fermé`},
+  {title:'Priorités types (P1→P4)', code: `<span>P1 - Critique</span>  : Service down, impact majeur\n                  Réponse: 15min / Résolution: 4h\n<span>P2 - Haute</span>     : Dégradation sévère\n                  Réponse: 30min / Résolution: 8h\n<span>P3 - Normale</span>   : Impact limité\n                  Réponse: 2h / Résolution: 24h\n<span>P4 - Basse</span>     : Gêne mineure\n                  Réponse: 4h / Résolution: 72h`},
+  {title:'Types de changements', code: `<span>Standard</span>  : Pré-approuvé, faible risque\n             Ex: Création compte AD\n<span>Normal</span>    : Approbation CAB requise\n             Ex: Mise à jour serveur\n<span>Urgence</span>   : Procédure accélérée\n             Ex: Fix critique en prod`},
+  {title:'Terminologie clé', code: `<span>CMDB</span>  : Base de données des actifs IT\n<span>CI</span>    : Configuration Item (actif)\n<span>SLA</span>   : Engagement de niveau de service\n<span>OLA</span>   : Accord interne entre équipes IT\n<span>CAB</span>   : Change Advisory Board\n<span>KEDB</span>  : Base d'erreurs connues`}
+];
+
+function buildCheatSheet(data, containerId) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '<div class="cheat-grid">' + data.map(item => `
+    <div class="cheat-item">
+      <h4>${item.title}</h4>
+      <code>${item.code}</code>
+    </div>
+  `).join('') + '</div>';
+}
+
+// ===== INIT =====
+function init() {
+  buildPSExercises();
+  buildSQLExercises();
+  buildQCM(networkQCM, 'network-qcm', 'netAnswered', 'netCorrect');
+  buildQCM(itilQCM, 'itil-qcm', 'itilAnswered', 'itilCorrect');
+  buildQCM(vmwareQCM, 'vmware-qcm', 'vmAnswered', 'vmCorrect');
+  buildQCM(adQCM, 'ad-qcm', 'adAnswered', 'adCorrect');
+  buildCheatSheet(cheatPS, 'cs-ps');
+  buildCheatSheet(cheatSQL, 'cs-sql');
+  buildCheatSheet(cheatNet, 'cs-net');
+  buildCheatSheet(cheatITIL, 'cs-itil');
+}
+
+// Enter key for PS
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.classList.contains('term-input')) {
+    const id = e.target.id.replace('ps-input-','');
+    checkPS(id);
+  }
+});
+
+init();
+</script>
+</body>
+</html>
